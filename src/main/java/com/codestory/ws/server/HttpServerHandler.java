@@ -29,7 +29,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     protected void handleHandshake(ChannelHandlerContext ctx, HttpRequest req) {
-        WebSocketServerHandshakerFactory wsHandshakerFactory = new WebSocketServerHandshakerFactory("ws://" + req.headers().get("Host") + req.uri(), null, true);
+        WebSocketServerHandshakerFactory wsHandshakerFactory = new WebSocketServerHandshakerFactory("ws://" + req.headers().get("Host") + req.uri(), "ws", true);
         webSocketServerHandshaker = wsHandshakerFactory.newHandshaker(req);
 
         if(webSocketServerHandshaker == null) {
