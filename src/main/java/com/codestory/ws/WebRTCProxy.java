@@ -39,7 +39,7 @@ public class WebRTCProxy {
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .childHandler(new HttpServerInitializer());
 
-        Channel channel = bootstrap.bind(7777).channel();
+        Channel channel = bootstrap.bind(5030).channel();
     }
 
     private static void startupWebSocketProxyClient(String host, int port) throws Exception {
