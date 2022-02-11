@@ -27,7 +27,7 @@ public class Session {
     private static void register(Channel channel) {
         final String id = channel.id().asLongText();
 
-        if((channel.isActive() || channel.isOpen()) && session.containsKey(id)) {
+        if(channel.isRegistered() && session.containsKey(id)) {
             session.put(id, new Session(channel));
             logger.log(Level.INFO, "Registered session id: " + id);
         }
