@@ -21,7 +21,7 @@ public class WebSocketServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         logger.info("is not null proxy : {}", WebRTCProxy.proxy != null);
         logger.info("proxy is opened : {}", WebRTCProxy.proxy.isOpen());
-        if(WebRTCProxy.proxy != null && WebRTCProxy.proxy.isOpen()) {
+        if(WebRTCProxy.proxy != null) {
             Session.checkAndRegisterSession(ctx.channel());
             String sessionId = Session.getSession(ctx.channel()).get().getId();
             logger.info("received session id: {}", sessionId);
