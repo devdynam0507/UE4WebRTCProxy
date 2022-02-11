@@ -9,21 +9,26 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebSocketServerHandler extends ChannelInboundHandlerAdapter {
 
     private static Gson gson = new GsonBuilder().create();
+    private static Logger logger = LoggerFactory.getLogger(WebSocketServerHandler.class);
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if(WebRTCProxy.proxy != null && WebRTCProxy.proxy.isOpen()) {
             Session.checkAndRegisterSession(ctx.channel());
             String sessionId = Session.getSession(ctx.channel()).get().getId();
+            logger.info("received session id: {}", sessionId);
 
             // 언리얼에서 보낸 데이터가 Text 라면
             if(msg instanceof TextWebSocketFrame) {
                 TextWebSocketFrame frame = (TextWebSocketFrame) msg;
 
+                logger.info("text frame : {}", frame.text());
                 // 들어온 데이터를 Json 파싱한다.
                 JSONObject jsonObject = new JSONObject(frame.text());
                 // 들어온 요청자의 proxy session을 json에 추가한다.
