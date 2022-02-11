@@ -63,6 +63,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
             // proxySessionId는 해당 프록시 서버를 거치면서 추가된 데이터이므로 다시 빼준다.
             jsonObject.remove(WebRTCProxy.keyOfProxySessionId);
+            logger.info("response proxy data: {}", jsonObject.toString());
             if(session.isPresent()) {
                 // response 해준다.
                 session.get().getChannel().writeAndFlush(new TextWebSocketFrame(jsonObject.toString()));
