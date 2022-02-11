@@ -37,7 +37,7 @@ public class WebSocketServerHandler extends ChannelInboundHandlerAdapter {
                 jsonObject.append(WebRTCProxy.keyOfProxySessionId, sessionId);
 
                 // Kurento 미디어 서버에 요청을 중계한다.
-                WebRTCProxy.proxy.writeAndFlush(jsonObject.toString());
+                WebRTCProxy.proxy.writeAndFlush(new TextWebSocketFrame(jsonObject.toString()));
             }
         }
     }
