@@ -33,8 +33,11 @@ public class WebSocketServerHandler extends ChannelInboundHandlerAdapter {
                 logger.info("text frame : {}", frame.text());
                 // 들어온 데이터를 Json 파싱한다.
                 JSONObject jsonObject = new JSONObject(frame.text());
+                String sdp = jsonObject.getString("sdpOffer").replace("\\n", "\n");
                 // 들어온 요청자의 proxy session을 json에 추가한다.
                 jsonObject.append(WebRTCProxy.keyOfProxySessionId, sessionId);
+                // UE에서 Json 파싱하는데에 개행있으면 \\n 으로 처리해줘야 하는데 이걸 다시 \n으로 바꿔줌
+                jsonObject.append("sdpOffer", sdp);
 
                 // Kurento 미디어 서버에 요청을 중계한다.
                 WebRTCProxy.proxy.writeAndFlush(new TextWebSocketFrame(jsonObject.toString()));
