@@ -16,6 +16,7 @@ public class WebSocketServerHandler extends ChannelInboundHandlerAdapter {
 
     private static Gson gson = new GsonBuilder().create();
     private static Logger logger = LoggerFactory.getLogger(WebSocketServerHandler.class);
+    private static String SDP_OFFER_KEY = "sdpOffer";
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -33,11 +34,13 @@ public class WebSocketServerHandler extends ChannelInboundHandlerAdapter {
                 logger.info("text frame : {}", frame.text());
                 // 들어온 데이터를 Json 파싱한다.
                 JSONObject jsonObject = new JSONObject(frame.text());
-                String sdp = jsonObject.getString("sdpOffer").replace("\\n", "\n");
+                if (jsonObject.get("id").equals("viewer")) {
+                    // UE에서 Json 파싱하는데에 개행있으면 \\n 으로 처리해줘야 하는데 이걸 다시 \n으로 바꿔줌
+                    String sdp = jsonObject.getString(SDP_OFFER_KEY).replace("\\n", "\n");
+                    jsonObject.put(SDP_OFFER_KEY, sdp);
+                }
                 // 들어온 요청자의 proxy session을 json에 추가한다.
                 jsonObject.put(WebRTCProxy.keyOfProxySessionId, sessionId);
-                // UE에서 Json 파싱하는데에 개행있으면 \\n 으로 처리해줘야 하는데 이걸 다시 \n으로 바꿔줌
-                jsonObject.put("sdpOffer", sdp);
 
                 // Kurento 미디어 서버에 요청을 중계한다.
                 WebRTCProxy.proxy.writeAndFlush(new TextWebSocketFrame(jsonObject.toString()));
